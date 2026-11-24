@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Consulta de los documentos que exigen los 85 trámites de la Gobernación del Huila y cuáles podría consultar en lugar de pedirlos.">
+<title>Trámites sin papeles Huila</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: herramienta de consulta. Franja de cifras arriba, consulta por trámite como núcleo, luego servicios, hoja de ruta y arquitectura. */
+:root{
+  --bg:#F6F8F6; --surface:#FFFFFF; --sunk:#EDF1EE; --line:#D6DDD8; --fg:#17231C; --muted:#56635B;
+  --accent:#1F6B45; --accent-ink:#FFFFFF; --ochre:#B07D12;
+  --cat-a:#2E7D54; --cat-a-bg:#DDEFE4; --cat-b:#2F5E8C; --cat-b-bg:#DFE8F4; --cat-c:#6B716D; --cat-c-bg:#ECEEEC;
+  --ok:#2E7D54; --ok-bg:#DDEFE4; --warn:#9A6A0B; --warn-bg:#FBF0D5; --bad:#A8333D; --bad-bg:#F8E1E3;
+  --pl:#6E4893; --org:#2F5E8C; --sem:#A57A12; --tec:#2E7D54;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif; --body:"Public Sans","Segoe UI",Arial,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0F1612; --surface:#16201A; --sunk:#1C2821; --line:#2C3A31; --fg:#E4ECE6; --muted:#9DAEA3;
+  --accent:#5FBF8C; --accent-ink:#0B1510; --ochre:#E0B04A;
+  --cat-a:#6FCB97; --cat-a-bg:#1F3A2A; --cat-b:#8DB4E2; --cat-b-bg:#1F2E40; --cat-c:#A9B0AB; --cat-c-bg:#262D29;
+  --ok:#6FCB97; --ok-bg:#1F3A2A; --warn:#E6BE62; --warn-bg:#3A3016; --bad:#EE8A93; --bad-bg:#3F2226;
+  --pl:#B696D8; --org:#8DB4E2; --sem:#E0B04A; --tec:#6FCB97; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0F1612; --surface:#16201A; --sunk:#1C2821; --line:#2C3A31; --fg:#E4ECE6; --muted:#9DAEA3;
+  --accent:#5FBF8C; --accent-ink:#0B1510; --ochre:#E0B04A;
+  --cat-a:#6FCB97; --cat-a-bg:#1F3A2A; --cat-b:#8DB4E2; --cat-b-bg:#1F2E40; --cat-c:#A9B0AB; --cat-c-bg:#262D29;
+  --ok:#6FCB97; --ok-bg:#1F3A2A; --warn:#E6BE62; --warn-bg:#3A3016; --bad:#EE8A93; --bad-bg:#3F2226;
+  --pl:#B696D8; --org:#8DB4E2; --sem:#E0B04A; --tec:#6FCB97; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:1120px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(28px,4.4vw,44px);font-weight:800;line-height:1.08}
+h2{font-size:24px;font-weight:700}
+h3{font-size:17px;font-weight:700}
+p{margin:0}
+.lede{max-width:68ch;color:var(--muted);font-size:16px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+header{padding-block:40px 24px;display:grid;gap:14px;border-bottom:1px solid var(--line)}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+nav.tabs a{font-size:13px;font-weight:600;color:var(--fg);text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
+nav.tabs a:hover,nav.tabs a:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+section{padding-block:36px 8px;display:grid;gap:18px}
+.sec-head{display:grid;gap:6px}
+.sec-head p{color:var(--muted);max-width:72ch}
+/* cifras */
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding-top:24px}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:4px;min-width:0}
+.fig .n{font-family:var(--display);font-size:34px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.fig .l{font-size:13px;color:var(--muted)}
+.stack{display:flex;height:12px;border-radius:6px;overflow:hidden;margin-top:8px;background:var(--sunk)}
+.stack span{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+/* consulta */
+.picker{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+label.f{display:grid;gap:4px;font-size:13px;font-weight:600}
+input[type=search],select{font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);width:100%;min-width:0}
+input[type=search]:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:600 12px/1 var(--body);padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tlist{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.tlist button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;padding:9px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-size:14px}
+.tlist button:last-child{border-bottom:0}
+.tlist button:hover,.tlist button:focus-visible{background:var(--sunk)}
+.tlist button[aria-current="true"]{background:var(--cat-a-bg)}
+.tlist .code{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.tlist .cnt{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:16px;min-width:0}
+.dhead{display:grid;gap:6px}
+.dhead .code{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.cbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:2px}
+.cbox .n{font-family:var(--display);font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.cbox .l{font-size:13px;color:var(--muted)}
+.cbox.now{background:var(--bad-bg);border-color:transparent}.cbox.now .n{color:var(--bad)}
+.cbox.after{background:var(--ok-bg);border-color:transparent}.cbox.after .n{color:var(--ok)}
+.docs{display:grid;gap:10px}
+details.doc{border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+details.doc>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 14px}
+details.doc>summary::-webkit-details-marker{display:none}
+details.doc>summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+details.doc[open]>summary{border-bottom:1px solid var(--line);background:var(--sunk)}
+.cat{font:700 12px/1 var(--mono);width:28px;height:28px;border-radius:6px;display:grid;place-items:center}
+.cat.a{background:var(--cat-a-bg);color:var(--cat-a)}.cat.b{background:var(--cat-b-bg);color:var(--cat-b)}.cat.c{background:var(--cat-c-bg);color:var(--cat-c)}
+.dname{font-weight:600;min-width:0}
+.dname small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+.pill{font:600 11.5px/1.2 var(--body);padding:4px 8px;border-radius:999px;white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}.pill.warn{background:var(--warn-bg);color:var(--warn)}.pill.bad{background:var(--bad-bg);color:var(--bad)}.pill.neu{background:var(--cat-c-bg);color:var(--cat-c)}
+.kv{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:8px 16px;padding:14px;font-size:14px}
+.kv dt{color:var(--muted);font-size:13px}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.mono{font-family:var(--mono);font-size:12.5px}
+.empty{padding:16px;border:1px dashed var(--line);border-radius:10px;color:var(--muted)}
+/* servicios */
+.svcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.svc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:10px;align-content:start;min-width:0}
+.svc .id{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.svc .meta{font-size:13px;color:var(--muted)}
+.svc table{width:100%;border-collapse:collapse;font-size:13px}
+.svc td{border-top:1px solid var(--line);padding:7px 6px 7px 0;vertical-align:top}
+.svc td:last-child{white-space:nowrap;text-align:right;padding-right:0}
+.svc .src{font-family:var(--mono);font-size:11.5px;color:var(--muted);overflow-wrap:anywhere}
+.svc .note{font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
+/* gantt */
+.gantt{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;overflow-x:auto}
+.grow{display:grid;grid-template-columns:44px minmax(560px,1fr);gap:10px;align-items:center;min-height:30px}
+.gid{font-family:var(--mono);font-size:12.5px;font-weight:500}
+.track{position:relative;height:22px;background:linear-gradient(to right,var(--sunk) 0,var(--sunk) 50%,transparent 50%);border-radius:4px}
+.bar{position:absolute;top:3px;height:16px;border-radius:3px}
+.bar:hover,.bar:focus-visible{outline:2px solid var(--fg);outline-offset:1px}
+.gaxis{display:grid;grid-template-columns:44px minmax(560px,1fr);gap:10px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.ticks{position:relative;height:18px}
+.ticks span{position:absolute;transform:translateX(-50%)}
+.gnote{display:grid;grid-template-columns:44px minmax(560px,1fr);gap:10px;font-size:12px;color:var(--muted);margin-bottom:6px}
+.gnote div{display:flex}.gnote div span{flex:1}
+.ginfo{min-height:48px;font-size:14px;padding:10px 12px;border-radius:8px;background:var(--sunk);margin-top:10px}
+figure{margin:0;background:#FFFFFF;border:1px solid var(--line);border-radius:12px;padding:12px;overflow-x:auto}
+figure img{display:block;max-width:100%;height:auto;margin:0 auto}
+figcaption{font-size:13px;color:#4A564F;margin-top:8px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);display:grid;gap:8px}
+footer p{max-width:90ch}
+@media (max-width:560px){ .kv{grid-template-columns:1fr} .picker{grid-template-columns:1fr} details.doc>summary{grid-template-columns:auto minmax(0,1fr)} details.doc>summary .pill{grid-column:2;justify-self:start} }
+@media (prefers-reduced-motion:no-preference){ details.doc[open]>.kv{animation:fade .18s ease-out} @keyframes fade{from{opacity:.4}to{opacity:1}} }
+</style>
+
+<style>[hidden]{display:none!important} img{max-width:100%} body{margin:0} :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <span class="eyebrow">Gobernación del Huila · registro del SUIT al 31 de octubre de 2026</span>
+  <h1>Qué documentos podría dejar de pedir la Gobernación del Huila</h1>
+  <p class="lede">Escoge un trámite y verás cada documento que hoy se le pide al ciudadano, quién lo expide, si la Gobernación ya tiene el dato en sus bases y qué haría falta para consultarlo en lugar de pedirlo.</p>
+  <nav class="tabs" aria-label="Secciones">
+    <a href="#consulta">Consulta por trámite</a><a href="#servicios">Servicios de consulta</a><a href="#hoja-de-ruta">Hoja de ruta</a><a href="#arquitectura">Arquitectura</a>
+  </nav>
+  <div class="figs" id="figs" aria-live="polite">
+    <div class="fig"><span class="n">323</span><span class="l">documentos exigidos en los 85 trámites</span></div>
+    <div class="fig"><span class="n">55</span><span class="l">los expide o guarda la propia Gobernación</span></div>
+    <div class="fig"><span class="n">1</span><span class="l">de esos 55 tiene el dato completo en una base declarada</span></div>
+    <div class="fig"><span class="n">129</span><span class="l">podrían dejar de pedirse si se cumple la iniciativa</span></div>
+  </div>
+</header>
+
+<section id="consulta" aria-labelledby="h-consulta">
+  <div class="sec-head">
+    <h2 id="h-consulta">Consulta por trámite</h2>
+    <p>Los trámites aparecen con su código del SUIT. El número a la derecha es cuántos documentos piden y cuántos podrían dejar de pedirse con la iniciativa.</p>
+  </div>
+  <div class="picker">
+    <label class="f" for="q">Buscar trámite por nombre o código
+      <input type="search" id="q" placeholder="Ej.: cesantía, pensión, 23022" autocomplete="off">
+    </label>
+    <div class="chips" role="group" aria-label="Filtrar trámites">
+      <button class="chip" id="f-all" aria-pressed="true" type="button">Todos</button>
+      <button class="chip" id="f-g1" aria-pressed="false" type="button">Docentes</button>
+      <button class="chip" id="f-some" aria-pressed="false" type="button">Con documentos que sobran</button>
+    </div>
+  </div>
+  <div class="tlist" id="tlist" role="list"></div>
+  <div class="detail" id="detail"><p class="empty">Cargando los datos de la matriz…</p></div>
+</section>
+
+<section id="servicios" aria-labelledby="h-serv">
+  <div class="sec-head">
+    <h2 id="h-serv">Servicios de consulta diseñados</h2>
+    <p>Cada servicio reemplaza un documento: recibe la cédula (o el código del prestador) y devuelve los datos que hoy certifica el papel. Al lado de cada dato está la tabla y el campo de la Gobernación de donde saldría, según su documento de datos maestros.</p>
+    <div class="legend"><span><i style="background:var(--ok)"></i>Existe en la base declarada</span><span><i style="background:var(--warn)"></i>Declarado, por confirmar</span><span><i style="background:var(--bad)"></i>Por crear</span></div>
+  </div>
+  <div class="svcs" id="svcs"></div>
+</section>
+
+<section id="hoja-de-ruta" aria-labelledby="h-ruta">
+  <div class="sec-head">
+    <h2 id="h-ruta">Hoja de ruta</h2>
+    <p>Las 17 acciones de la iniciativa, en meses desde que la Gobernación la adopte. Toca una barra para leer la acción completa.</p>
+    <div class="legend"><span><i style="background:var(--pl)"></i>Político-legal</span><span><i style="background:var(--org)"></i>Organizacional</span><span><i style="background:var(--sem)"></i>Semántico</span><span><i style="background:var(--tec)"></i>Técnico</span></div>
+  </div>
+  <div class="gantt">
+    <div class="gnote"><span></span><div><span>Paso 1: completar y conectar el dato</span><span>Paso 2: dejar de exigir el documento</span></div></div>
+    <div id="grows"></div>
+    <div class="gaxis"><span></span><div class="ticks" id="ticks"></div></div>
+    <div class="ginfo" id="ginfo" aria-live="polite">P1 · Político-legal · Adoptar un acto interno que instruya a las dependencias a no exigir cada documento desde que su consulta exista y a consultarlo.</div>
+  </div>
+</section>
+
+<section id="arquitectura" aria-labelledby="h-arq">
+  <div class="sec-head">
+    <h2 id="h-arq">Cómo se conectaría</h2>
+    <p>El trámite consulta una capa de intercambio interna que lee las bases de la Gobernación; los documentos de otras autoridades se consultan por el servicio nacional de interoperabilidad, al que la Gobernación aún no está vinculada.</p>
+  </div>
+  <figure><img src="arquitectura.svg" alt="Diagrama: el ciudadano radica la solicitud; el trámite consulta los servicios internos SC-01 a SC-09 sobre las bases de la Gobernación y, para documentos de otras autoridades, el servicio X-Road hacia la Registraduría, las cámaras de comercio, las administradoras de pensiones y las instituciones educativas."><figcaption>Arquitectura propuesta. La fila sombreada en rojo agrupa los datos que hoy no tienen base declarada.</figcaption></figure>
+  <figure><img src="antes_despues.png" alt="Comparación del trámite de cesantía definitiva: hoy el docente reúne 10 documentos; con la iniciativa aporta 3 y el sistema consulta los demás."><figcaption>Cesantía definitiva para docentes oficiales (trámite 23022): hoy y con la iniciativa cumplida.</figcaption></figure>
+</section>
+
+<footer>
+  <p><strong>Fuentes.</strong> Requisitos: Visor del SUIT de Función Pública, consultado el 31 de octubre de 2026. Bases y mecanismos: documento de datos maestros de la Gobernación del Huila, PETI 2026 y respuesta de la entidad del 12 de noviembre de 2026 a una solicitud de información.</p>
+  <p><strong>Límites.</strong> Los grupos, acciones, responsables, plazos y servicios son propuestas del estudio «Diseño de una propuesta de interoperabilidad de datos para reducir los documentos exigidos en los trámites de la Gobernación del Huila» (Ramón Ramos, 2026). No se revisaron los sistemas internos de la entidad. «Podría dejar de pedirse» no es inmediato: cada documento exige primero completar el dato y construir la consulta, y los de otras autoridades dependen de la vinculación al servicio de interoperabilidad.</p>
+</footer>
+</div>
+
+<script>
+(function(){
+  const $=s=>document.querySelector(s);
+  const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const CAT={a:'La propia Gobernación',b:'Otra autoridad o registro',c:'Solo el ciudadano'};
+  const SIT={ 'completa':['ok','Dato completo'], 'parcial':['warn','Dato parcial'], 'no declarada':['bad','Sin base declarada'],
+    'servicio web completo':['ok','Servicio web completo'], 'servicio web parcial':['warn','Servicio web parcial'],
+    'consulta pública completa':['warn','Consulta pública'], 'consulta pública de vigencia (sin confirmar)':['warn','Consulta de vigencia'],
+    'mecanismo no declarado':['bad','Sin mecanismo'], 'solo el ciudadano':['neu','Lo aporta el ciudadano'] };
+  const DOMC={'Político-legal':'var(--pl)','Organizacional':'var(--org)','Semántico':'var(--sem)','Técnico':'var(--tec)'};
+  const EST={'Existe en la base declarada':'ok','Declarado, por confirmar':'warn','Por crear':'bad'};
+  let D=null, byT={}, filter='all', current=null;
+
+  function stats(code){ const r=byT[code]||[]; const s={n:r.length,a:0,b:0,c:0,k:0,g1:0};
+    r.forEach(x=>{s[x.categoria]++; if(x.grupo_n>0) s.k++; if(x.grupo_n===1) s.g1++;}); return s; }
+
+  function renderList(){
+    const q=$('#q').value.trim().toLowerCase();
+    const items=D.tramites.filter(t=>{ const s=stats(t.codigo);
+      if(filter==='g1' && !s.g1) return false; if(filter==='some' && !s.k) return false;
+      return !q || String(t.codigo).includes(q) || t.nombre.toLowerCase().includes(q); });
+    $('#tlist').innerHTML = items.length ? items.map(t=>{ const s=stats(t.codigo);
+      return `<button role="listitem" data-c="${t.codigo}" aria-current="${t.codigo===current}"><span class="code">${t.codigo}</span><span>${esc(t.nombre)}</span><span class="cnt">${s.n?`${s.n} doc. · ${s.k} sobran`:'sin documentos'}</span></button>`; }).join('')
+      : '<p class="empty" style="margin:12px">Ningún trámite coincide con la búsqueda.</p>';
+  }
+
+  function renderDetail(code,user){
+    current=code; const t=D.tramites.find(x=>x.codigo===code); const r=byT[code]||[]; const s=stats(code);
+    if(user){ try{ history.replaceState(null,'','#t'+code); }catch(e){} }
+    if(!r.length){ $('#detail').innerHTML=`<div class="dhead"><span class="code">Trámite ${code}</span><h3>${esc(t.nombre)}</h3></div><p class="empty">El registro del SUIT no le asigna documentos al ciudadano en este trámite (solo la solicitud, el formulario o el pago), así que no hay nada que retirar.</p>`; renderList(); return; }
+    const stack=['a','b','c'].map(c=>s[c]?`<span style="width:${s[c]/s.n*100}%;background:var(--cat-${c})" title="${CAT[c]}: ${s[c]}"></span>`:'').join('');
+    $('#detail').innerHTML=`
+      <div class="dhead"><span class="code">Trámite ${code} · ${esc(t.en_linea?('en línea: '+t.en_linea.toLowerCase()):'')}</span><h3>${esc(t.nombre)}</h3>
+        <div class="stack" aria-hidden="true">${stack}</div>
+        <div class="legend"><span><i style="background:var(--cat-a)"></i>(a) Gobernación: ${s.a}</span><span><i style="background:var(--cat-b)"></i>(b) Otras autoridades: ${s.b}</span><span><i style="background:var(--cat-c)"></i>(c) Ciudadano: ${s.c}</span></div></div>
+      <div class="compare">
+        <div class="cbox now"><span class="n">${s.n}</span><span class="l">documentos que pide hoy</span></div>
+        <div class="cbox after"><span class="n">${s.n-s.k}</span><span class="l">documentos que pediría con la iniciativa cumplida</span></div>
+        <div class="cbox"><span class="n">${s.k}</span><span class="l">se consultarían en lugar de pedirlos</span></div>
+      </div>
+      <div class="docs">${r.map(x=>{ const st=SIT[x.situacion]||['neu',x.situacion];
+        return `<details class="doc"><summary><span class="cat ${x.categoria}" title="${CAT[x.categoria]}">${x.categoria}</span><span class="dname">${esc(x.documento)}<small>${esc(x.emisor)}${x.grupo_n?` · ${esc(x.grupo)}`:''}</small></span><span class="pill ${st[0]}">${st[1]}</span></summary>
+        <dl class="kv">
+          <dt>Qué falta</dt><dd>${esc(x.que_falta)}</dd>
+          ${x.categoria!=='c'?`<dt>Base de la Gobernación</dt><dd>${esc(x.base)}</dd>
+          <dt>Mecanismo declarado</dt><dd>${esc(x.mecanismo)}</dd>
+          <dt>Servicio de consulta</dt><dd class="mono">${esc(x.servicio)}</dd>
+          <dt>Acciones</dt><dd class="mono">${esc(x.acciones)}</dd>
+          <dt>Responsable</dt><dd>${esc(x.responsable)}</dd>
+          <dt>Plazo</dt><dd>Paso 1: ${esc(x.paso1)} · Paso 2: ${esc(x.paso2)} (meses)</dd>
+          <dt>Norma</dt><dd>${esc(x.norma)}</dd>`:''}
+          ${x.supuesto!=='—'?`<dt>Supuesto</dt><dd>${x.supuesto.includes('EV')?'Puede provenir de distintas autoridades. ':''}${x.supuesto.includes('MC')?'Acto previo de la misma competencia del trámite.':''}</dd>`:''}
+          ${x.condicional==='Sí'?'<dt>Condicional</dt><dd>Solo se exige en ciertos casos, según el registro.</dd>':''}
+        </dl></details>`;}).join('')}</div>`;
+    renderList();
+  }
+
+  function renderServicios(){
+    $('#svcs').innerHTML=D.servicios.map(s=>`<article class="svc"><span class="id">${s.id}</span><h3>${esc(s.nombre)}</h3>
+      <p class="meta">Reemplaza: ${esc(s.documento)} · en ${s.tramites.length} trámite${s.tramites.length>1?'s':''}<br>Entrada: ${esc(s.entrada)}<br>Dueño del dato: ${esc(s.dueno)}</p>
+      <table><tbody>${s.salida.map(([d,src,e])=>`<tr><td><div>${esc(d)}</div><div class="src">${esc(src)}</div></td><td><span class="pill ${EST[e]||'neu'}">${esc(e==='Existe en la base declarada'?'Existe':e==='Declarado, por confirmar'?'Por confirmar':e)}</span></td></tr>`).join('')}</tbody></table>
+      <p class="note">${esc(s.nota)}</p></article>`).join('');
+  }
+
+  function renderGantt(){
+    const max=24, pct=m=>(m/max*100);
+    const SEG={P1:[[1,3],[12,21]],O3:[[1,3],[12,21]]};
+    $('#grows').innerHTML=D.acciones.map(a=>`<div class="grow"><span class="gid">${a.id}</span><div class="track">${(SEG[a.id]||[[a.ini,a.fin]]).map(([i,f])=>`<button class="bar" type="button" data-id="${a.id}" aria-label="${a.id}, meses ${a.plazo}" style="left:${pct(i-1)}%;width:${pct(f-i+1)}%;background:${DOMC[a.dominio]}"></button>`).join('')}</div></div>`).join('');
+    $('#ticks').innerHTML=[0,3,6,9,12,15,18,21,24].map(m=>`<span style="left:${pct(m)}%">${m}</span>`).join('');
+    $('#grows').addEventListener('click',e=>{ const b=e.target.closest('.bar'); if(!b) return; const a=D.acciones.find(x=>x.id===b.dataset.id);
+      $('#ginfo').innerHTML=`<strong>${a.id} · ${esc(a.dominio)}</strong> · ${esc(a.texto)}<br><span style="color:var(--muted)">Metas ${esc(a.metas)} · ${esc(a.responsable)} · meses ${esc(a.plazo)}</span>`; });
+  }
+
+  $('#tlist').addEventListener('click',e=>{ const b=e.target.closest('button[data-c]'); if(b) renderDetail(+b.dataset.c,true); });
+  $('#q').addEventListener('input',renderList);
+  [['f-all','all'],['f-g1','g1'],['f-some','some']].forEach(([id,v])=>$('#'+id).addEventListener('click',()=>{ filter=v;
+    document.querySelectorAll('.chips .chip').forEach(c=>c.setAttribute('aria-pressed',c.id===id)); renderList(); }));
+
+  fetch('matriz.json').then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }).then(d=>{
+    D=d; d.rows.forEach(x=>{ (byT[x.codigo]=byT[x.codigo]||[]).push(x); });
+    Object.values(byT).forEach(r=>r.sort((p,q)=>p.categoria.localeCompare(q.categoria)||(q.grupo_n>0)-(p.grupo_n>0)));
+    renderServicios(); renderGantt();
+    const h=(location.hash.match(/^#t(\d+)$/)||[])[1]; renderDetail(h&&d.tramites.some(t=>t.codigo===+h)?+h:23022);
+  }).catch(()=>{ $('#detail').innerHTML='<p class="empty">No se pudieron cargar los datos de la matriz. Recarga la página.</p>'; });
+  window.addEventListener('hashchange',()=>{ const h=(location.hash.match(/^#t(\d+)$/)||[])[1]; if(h&&D&&D.tramites.some(t=>t.codigo===+h)) renderDetail(+h); });
+})();
+</script>
+
+</body>
+</html>
